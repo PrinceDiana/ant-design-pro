@@ -1,8 +1,6 @@
 import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
 import { Alert, Checkbox } from 'antd';
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
-
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { Dispatch } from 'redux';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
@@ -13,7 +11,6 @@ import LoginComponents from './components/Login';
 import styles from './style.less';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
-
 interface LoginProps {
   dispatch: Dispatch<any>;
   userAndlogin: StateType;
@@ -46,20 +43,20 @@ class Login extends Component<LoginProps, LoginState> {
 
   handleSubmit = (err: any, values: FormDataType) => {
     const { type } = this.state;
+
     if (!err) {
       const { dispatch } = this.props;
       dispatch({
         type: 'userAndlogin/login',
-        payload: {
-          ...values,
-          type,
-        },
+        payload: { ...values, type },
       });
     }
   };
 
   onTabChange = (type: string) => {
-    this.setState({ type });
+    this.setState({
+      type,
+    });
   };
 
   onGetCaptcha = () =>
@@ -67,6 +64,7 @@ class Login extends Component<LoginProps, LoginState> {
       if (!this.loginForm) {
         return;
       }
+
       this.loginForm.validateFields(['mobile'], {}, (err: any, values: FormDataType) => {
         if (err) {
           reject(err);
@@ -83,7 +81,14 @@ class Login extends Component<LoginProps, LoginState> {
     });
 
   renderMessage = (content: string) => (
-    <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
+    <Alert
+      style={{
+        marginBottom: 24,
+      }}
+      message={content}
+      type="error"
+      showIcon
+    />
   );
 
   render() {
@@ -100,97 +105,94 @@ class Login extends Component<LoginProps, LoginState> {
             this.loginForm = form;
           }}
         >
-          <Tab
-            key="account"
-            tab={formatMessage({ id: 'userandlogin.login.tab-login-credentials' })}
-          >
+          <Tab key="account" tab="账户密码登录">
             {status === 'error' &&
               loginType === 'account' &&
               !submitting &&
-              this.renderMessage(
-                formatMessage({ id: 'userandlogin.login.message-invalid-credentials' }),
-              )}
+              this.renderMessage('账户或密码错误（admin/ant.design）')}
             <UserName
               name="userName"
-              placeholder={`${formatMessage({ id: 'userandlogin.login.userName' })}: admin or user`}
+              placeholder={`${'用户名'}: admin or user`}
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: 'userandlogin.userName.required' }),
+                  message: '请输入用户名!',
                 },
               ]}
             />
             <Password
               name="password"
-              placeholder={`${formatMessage({ id: 'userandlogin.login.password' })}: ant.design`}
+              placeholder={`${'密码'}: ant.design`}
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: 'userandlogin.password.required' }),
+                  message: '请输入密码！',
                 },
               ]}
               onPressEnter={e => {
                 e.preventDefault();
+
                 if (this.loginForm) {
                   this.loginForm.validateFields(this.handleSubmit);
                 }
               }}
             />
           </Tab>
-          <Tab key="mobile" tab={formatMessage({ id: 'userandlogin.login.tab-login-mobile' })}>
+          <Tab key="mobile" tab="手机号登录">
             {status === 'error' &&
               loginType === 'mobile' &&
               !submitting &&
-              this.renderMessage(
-                formatMessage({ id: 'userandlogin.login.message-invalid-verification-code' }),
-              )}
+              this.renderMessage('验证码错误')}
             <Mobile
               name="mobile"
-              placeholder={formatMessage({ id: 'userandlogin.phone-number.placeholder' })}
+              placeholder="手机号"
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: 'userandlogin.phone-number.required' }),
+                  message: '请输入手机号！',
                 },
                 {
                   pattern: /^1\d{10}$/,
-                  message: formatMessage({ id: 'userandlogin.phone-number.wrong-format' }),
+                  message: '手机号格式错误！',
                 },
               ]}
             />
             <Captcha
               name="captcha"
-              placeholder={formatMessage({ id: 'userandlogin.verification-code.placeholder' })}
+              placeholder="验证码"
               countDown={120}
               onGetCaptcha={this.onGetCaptcha}
-              getCaptchaButtonText={formatMessage({ id: 'userandlogin.form.get-captcha' })}
-              getCaptchaSecondText={formatMessage({ id: 'userandlogin.captcha.second' })}
+              getCaptchaButtonText="获取验证码"
+              getCaptchaSecondText="秒"
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: 'userandlogin.verification-code.required' }),
+                  message: '请输入验证码！',
                 },
               ]}
             />
           </Tab>
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              <FormattedMessage id="userandlogin.login.remember-me" />
+              自动登录
             </Checkbox>
-            <a style={{ float: 'right' }} href="">
-              <FormattedMessage id="userandlogin.login.forgot-password" />
+            <a
+              style={{
+                float: 'right',
+              }}
+              href=""
+            >
+              忘记密码
             </a>
           </div>
-          <Submit loading={submitting}>
-            <FormattedMessage id="userandlogin.login.login" />
-          </Submit>
+          <Submit loading={submitting}>登录</Submit>
           <div className={styles.other}>
-            <FormattedMessage id="userandlogin.login.sign-in-with" />
+            其他登录方式
             <AlipayCircleOutlined className={styles.icon} />
             <TaobaoCircleOutlined className={styles.icon} />
             <WeiboCircleOutlined className={styles.icon} />
             <Link className={styles.register} to="/user/register">
-              <FormattedMessage id="userandlogin.login.signup" />
+              注册账户
             </Link>
           </div>
         </LoginComponents>

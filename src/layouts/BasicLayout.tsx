@@ -15,12 +15,12 @@ import { Link } from 'umi';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { Icon, Result, Button } from 'antd';
-import { formatMessage } from 'umi-plugin-react/locale';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
+
 const noMatch = (
   <Result
     status="403"
@@ -167,10 +167,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         breadcrumbRender={(routers = []) => [
           {
             path: '/',
-            breadcrumbName: formatMessage({
-              id: 'menu.home',
-              defaultMessage: 'Home',
-            }),
+            breadcrumbName: '首页',
           },
           ...routers,
         ]}
@@ -184,7 +181,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         }}
         footerRender={footerRender}
         menuDataRender={menuDataRender}
-        formatMessage={formatMessage}
         rightContentRender={() => <RightContent />}
         {...props}
         {...settings}
